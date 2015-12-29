@@ -1,37 +1,37 @@
-var h = 400,w = 500,
-margin = {left:50,right:20,top:30,bottom:30},
+var h = 400,w = 500,//首先创建div元素，这里是div元素的高度
+margin = {left:50,right:20,top:30,bottom:30},//将全局变量保存在一个对象里面可以防止命名空间的污染
     gh = h-margin.top-margin.bottom,
-    gw = w-margin.left-margin.right;
-var ds = [12,1,1,5,6,85,12,2,2,5,2,6,6,6,5,];
-var sx = d3.scale.linear().domain([0,ds.length-1]).range([0,gw]),
-sy = d3.scale.linear().domain([0,d3.max(ds)]).range([gh,0]);
+    gw = w-margin.left-margin.right;//指定g元素的高度和宽度
+var ds = [12,1,1,5,6,85,12,2,2,5,2,6,6,6,5,];//给定要展示的数据
+var sx = d3.scale.linear().domain([0,ds.length-1]).range([0,gw]),//生成比例尺，这里的比例尺对应数据和g元素的大小
+sy = d3.scale.linear().domain([0,d3.max(ds)]).range([gh,0]);//同理生成y方向上的比例尺
 var svg = d3.select("#container")
 .append("svg:svg")
 .attr("height",h)
-.attr("width",w);
+.attr("width",w);//这一步用上述变量创建一个svg元素
 var g = svg.append("svg:g")
 .attr("width",gw)
 .attr("height",gh)
-.attr("transform","translate("+margin.left+","+margin.top+")");
+.attr("transform","translate("+margin.left+","+margin.top+")");//这一步在svg元素的内部创建一个g元素，就像html中的div元素一样，设置位置通过偏移来进行设置
 var lg = d3.svg.line()
 .x(function(d,i) {return sx(i);})
 .y(function(d) {return sy(d);})
-.interpolate("cardinal");
+.interpolate("cardinal");//这一步是创建用于由数据生成曲线的函数，仅仅是创建函数
 g.append("svg:path")
-.attr("d",lg(ds));
-var xa = d3.svg.axis().scale(sx);
+.attr("d",lg(ds));//这一步是在g元素内部添加path元素，该元素调用曲线函数和数据共同生成曲线
+var xa = d3.svg.axis().scale(sx);生成坐标轴，坐标轴和数据一样也要进行比例尺的缩放才可以
 g.append("svg:g")
 .call(xa)
-.attr("transform","translate(0,"+gh+")");
+.attr("transform","translate(0,"+gh+")");//创建了一个g元素用来保存坐标轴，然后对该坐标轴进行了平移，是平移
 var ya = d3.svg.axis().scale(sy)
-.orient("left");
+.orient("left");//同理生成y轴的函数
 g.append("svg:g")
 .call(ya)
 .append("text")
 .text("price")
 .attr("transform","rotate(-90)")
 .attr("text-anchor","end")
-.attr("dy","1em");
+.attr("dy","1em");//调用y轴的函数（设置平移的类型是旋转）并添加文本，然后对文本进行美化
 
 
 
