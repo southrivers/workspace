@@ -1,0 +1,53 @@
+var h = 400,w = 500,
+margin = {left:50,right:20,top:30,bottom:30},
+    gh = h-margin.top-margin.bottom,
+    gw = w-margin.left-margin.right;
+var ds = [12,1,1,5,6,85,12,2,2,5,2,6,6,6,5,];
+var sx = d3.scale.linear().domain([0,ds.length-1]).range([0,gw]),
+sy = d3.scale.linear().domain([0,d3.max(ds)]).range([gh,0]);
+var svg = d3.select("#container")
+.append("svg:svg")
+.attr("height",h)
+.attr("width",w);
+var g = svg.append("svg:g")
+.attr("width",gw)
+.attr("height",gh)
+.attr("transform","translate("+margin.left+","+margin.top+")");
+var lg = d3.svg.line()
+.x(function(d,i) {return sx(i);})
+.y(function(d) {return sy(d);})
+.interpolate("cardinal");
+g.append("svg:path")
+.attr("d",lg(ds));
+var xa = d3.svg.axis().scale(sx);
+g.append("svg:g")
+.call(xa)
+.attr("transform","translate(0,"+gh+")");
+var ya = d3.svg.axis().scale(sy)
+.orient("left");
+g.append("svg:g")
+.call(ya)
+.append("text")
+.text("price")
+.attr("transform","rotate(-90)")
+.attr("text-anchor","end")
+.attr("dy","1em");
+
+
+
+
+#container{
+ background-color: #ddd;  
+ width: 600px;
+ height: 600px;
+}
+  path{
+    fill:none;
+    stroke:steelblue;
+    stroke-width:2
+  }
+
+
+
+
+  <div id="container"></div>
